@@ -8,7 +8,7 @@ def auth(hostname, client_id, client_secret, username, password):
 	'Content-Type': 'application/x-www-form-urlencoded'
 	}
 	params = {
-		'grant_type': 'password',
+		'grant_type': 'authorization_code',
 		'client_id': client_id,
 		'client_secret': client_secret,
 		'username': username,
@@ -23,12 +23,12 @@ def auth(hostname, client_id, client_secret, username, password):
 
 def handle_response(response):
 	if response.status_code == 404:
-		raise Exception("Item not found")
+		raise Exception("Item not found: {}".format(response.text))
 	elif response.status_code == 401:
-		raise Exception("Unauthorized")
+		raise Exception("Unauthorized: {}".format(response.text))
 	elif response.status_code == 400:
-		raise Exception("Bad request")
+		raise Exception("Bad request: {}".format(response.text))
 	elif response.status_code != 200:
-		raise Exception("Other error")
+		raise Exception("Other error: {}".format(response.text))
 	else:
 		pass
