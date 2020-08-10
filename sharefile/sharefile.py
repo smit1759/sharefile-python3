@@ -5,8 +5,11 @@ from urllib.parse import urljoin
 class Sharefile:
     token = None
 
-    def __init__(self, hostname, token):
-        self.token = token #utils.auth(hostname, client_id, client_secret, username, password)
+    def __init__(self, hostname=None, client_id=None, client_secret=None, username=None, password=None, token=None):
+        if token:
+            self.token = token
+        else:
+            self.token = utils.auth(hostname, client_id, client_secret, username, password)
         self.hostname = hostname
 
 
@@ -29,7 +32,7 @@ class Sharefile:
     def get_by_path(self, path):
         """ Get a single Item by Id.
         Args:
-        string item_id - an item id """
+        string path - an path """
         if not self.token:
             raise Exception("Authentication token not present.")
         uri = urljoin(self.hostname, '/sf/v3/Items/ByPath?path={}'.format(path))

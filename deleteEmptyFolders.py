@@ -5,9 +5,9 @@ import sys
 
 def main():
 	try:
-		client = Sharefile(os.environ["SF_URL"], os.environ["SF_TOKEN"])
+		client = Sharefile(hostname=os.environ["SF_URL"], token=os.environ["SF_TOKEN"])
 	except KeyError:
-		raise Exception("Environment Variables Not Set.")
+		raise Exception("Environment Variables Not Set.")	
 		exit()
 
 	all_folders = client.get_children(sys.argv[1])
