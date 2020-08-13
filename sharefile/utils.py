@@ -1,24 +1,17 @@
 import requests
 from urllib.parse import urljoin
-
+from oauthlib.oauth2 import LegacyApplicationClient
+from requests_oauthlib import OAuth2Session
 
 def auth(hostname, client_id, client_secret, username, password):
-	uri = urljoin(hostname, '/oauth/token')
-	headers = {
-	'Content-Type': 'application/x-www-form-urlencoded'
-	}
-	params = {
-		'grant_type': 'authorization_code',
-		'client_id': client_id,
-		'client_secret': client_secret,
-		'username': username,
-		'password': password
-	}
-	response = requests.post(uri, params=params, headers=headers)
-	print(response.status_code, response.json())
-	if response.status_code != 200:
-		raise Exception("[!] Error gaining oauth token")
-	return response.json()
+	try:
+		oauth = OAuth2Session(client=LegacyApplicationClient(client_id=client_id))
+		token = oauth.fetch_token(token_url=urljoin(hostname, '/oauth/token'),
+	        username=username, password=password, client_id=client_id,
+	        client_secret=client_secret)
+		return token
+	except Exception as e:
+		raise Exception("[!] Error gaining oauth token:\n{0}".format(e))
 
 
 def handle_response(response):
